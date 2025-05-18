@@ -1,0 +1,20 @@
+{
+    "name": "com.fuzzphyte.applications.analytics",
+    "rootNamespace": "FuzzPhyte.Applications.Analytics",
+    "references": [
+        "com.fuzzphyte.utility",
+        "com.fuzzphyte.utility.analytics",
+        "com.fuzzphyte.xr",
+        "com.fuzzphyte.utility.edu",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

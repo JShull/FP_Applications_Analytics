@@ -1,0 +1,40 @@
+{
+    "name": "com.fuzzphyte.applications.analytics",
+    "version": "0.1.0",
+    "displayName": "FP Applications Analytics",
+    "description": "FP AA utilizes lower FuzzPhyte libraries to build app level solutions.  https://github.com/JShull/FP_Utility.git to your Unity package manager as a git url and others.",
+    "unity": "6000.1",
+    "unityRelease": "0f1",
+    "documentationUrl": "https://github.com/jshull/FP_Applications_Analytics/README.md",
+    "changelogUrl": "https://github.com/jshull/FP_Applications_Analytics/CHANGELOG.md",
+    "licensesUrl": "https://github.com/jshull/FP_Applications_Analytics/LICENSE.md",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/jshull/FP_Applications_Analytics.git"
+    },
+    "dependencies": {
+      "com.unity.mathematics": "1.2.6",
+      "com.unity.textmeshpro": "3.0.9",
+      "com.fuzzphyte.utility": "https://github.com/JShull/FP_Utility.git"
+    },
+    "samples": [
+      {
+        "displayName": "Vocabulary Tracker",
+        "description": "Example scene that tracks the number of times you interact with something based on the vocab. Please make sure you have TextMeshPro already added in to Unitys Package Manager",
+        "path": "Samples~/SamplesURP"
+      }
+    ],
+    "keywords": [
+      "ScriptableObject",
+      "Analytics",
+      "Applications",
+      "Unity",
+      "FuzzPhyte"
+    ],
+    "author": {
+      "name": "John Shull",
+      "email": "the.john.shull@gmail.com",
+      "url": "https://github.com/jshull"
+    },
+    "type": "tool"
+  }
