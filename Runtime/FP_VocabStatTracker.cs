@@ -7,11 +7,14 @@ namespace FuzzPhyte.Applications.Analytics
     using FuzzPhyte.XR;
     using UnityEngine;
     using System.Linq;
-    public class FP_VocabStatTracker : MonoBehaviour
+    using System.Collections;
+
+    public class FP_VocabStatTracker : MonoBehaviour,IFPDontDestroy
     {
         public static FP_VocabStatTracker Instance { get; private set; }
-       
-        
+        public bool DontDestroy { get => dontDestroy; set => dontDestroy=value; }
+        [SerializeField] protected bool dontDestroy;
+
         //we really just want to keep tabs on the number of times the audio/label was presented to start
         protected Dictionary<FP_Vocab, FP_StatReporter_Int> vocabMediaInteracted = new();
         //we also want to keep tabs on number of pick ups of this type of vocab
@@ -19,15 +22,16 @@ namespace FuzzPhyte.Applications.Analytics
         [Space]
         [Header("Details")]
         public List<FPSpawner> TrackedSpawners = new List<FPSpawner>();
-        
-        protected List<FP_Vocab> allVocab = new List<FP_Vocab>();
+        protected WaitForEndOfFrame endOfFrameDelay;
+        [SerializeField]protected List<FP_Vocab> allVocab = new List<FP_Vocab>();
         [Tooltip("This object needs a stat reporter on it")]
         public GameObject InteractionStatReporterPrefab;
         public GameObject MediaStatReporterPrefab;
+
         //public Dictionary<FP_Vocab,FP_StatReporter_Int> VocabTrackers { get => vocabTrackers; }
         //public Dictionary<FP_Vocab,FP_StatReporter_Int> VocabInteractions { get => vocabInteractions; }
         //public IReadOnlyDictionary<FP_Vocab, FP_StatReporter_Int> ReturnTrackers() => vocabMediaInteracted;
-        protected void Awake()
+        public virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -35,12 +39,19 @@ namespace FuzzPhyte.Applications.Analytics
                 return;
             }
             Instance = this;
+            if (DontDestroy)
+            {
+                DontDestroyOnLoad(this);
+            }
+            endOfFrameDelay = new WaitForEndOfFrame();
         }
         #region Setup
         protected void Start()
         {
             //remove duplicates
             allVocab = allVocab.Distinct().ToList();
+            vocabMediaInteracted = new Dictionary<FP_Vocab, FP_StatReporter_Int>();
+            vocabInteracted = new Dictionary<FP_Vocab, FP_StatReporter_Int>();
             //register for listeners now that we already have in our list
         }
 #if UNITY_EDITOR
@@ -132,29 +143,39 @@ namespace FuzzPhyte.Applications.Analytics
                 }
             }
             //seen this vocab?
-            for(int i = 0; i < cachedVocab.Count; i++)
+            for(int j = 0; j < cachedVocab.Count; j++)
             {
-                var aVocabCached = cachedVocab[i];
+                var aVocabCached = cachedVocab[j];
                 if (!allVocab.Contains(aVocabCached))
                 {
                     allVocab.Add(aVocabCached);
                 }
-                if (!storage.TryGetValue(aVocabCached, out var reporter))
+                FP_StatReporter_Int reporter;
+                if (!storage.TryGetValue(aVocabCached, out reporter))
                 {
                     reporter = CreateTrackerForVocab(prefab,aVocabCached);
+                    Debug.Log($"Creating reporter for {aVocabCached.Word}");
                     if(reporter != null)
                     {
-                        storage[aVocabCached] = reporter;
+                        storage.Add(aVocabCached, reporter);
                     }
                     else
                     {
                         return;
                     }
-                   
                 }
-                bool success = false;
-                reporter.NewStatData($"Interacted with {aVocabCached.Word}", ref success, 1);
+                else
+                {
+                    Debug.Log($"Had the reporter already, {aVocabCached.Word}");
+                }
+                    StartCoroutine(DelayEndOfFrameSyncReporter(aVocabCached, reporter));
             }
+        }
+        IEnumerator DelayEndOfFrameSyncReporter(FP_Vocab aVocabCached, FP_StatReporter_Int reporter)
+        {
+            yield return endOfFrameDelay;
+            bool success = false;
+            reporter.NewStatData($"Interacted with {aVocabCached.Word}", ref success, 1);
         }
         protected virtual FP_StatReporter_Int CreateTrackerForVocab(GameObject statPrefab,FP_Vocab vocab)
         {
@@ -169,6 +190,38 @@ namespace FuzzPhyte.Applications.Analytics
                 return null;
             }
             return reporter;
+        }
+        [ContextMenu("Testing something for the stats")]
+        public void EndAllStats()
+        {
+            var allKeysDictionaryOne = vocabMediaInteracted.Keys.ToList();
+            var allKeysDictionaryTwo = vocabInteracted.Keys.ToList();
+
+            for(int i = 0; i < allKeysDictionaryOne.Count; i++)
+            {
+                var aKey = allKeysDictionaryOne[i];
+                vocabMediaInteracted[aKey].EndStatData();
+            }
+            for (int i = 0; i < allKeysDictionaryTwo.Count; i++)
+            {
+                var aKey = allKeysDictionaryTwo[i];
+                vocabInteracted[aKey].EndStatData();
+            }
+
+            //now do the calculation
+            //ReturnStatCalculation
+            for (int i = 0; i < allKeysDictionaryOne.Count; i++)
+            {
+                var aKey = allKeysDictionaryOne[i];
+                (double valueDictionaryOne, bool success) = vocabMediaInteracted[aKey].ReturnStatCalculation(StatCalculationType.Sum);
+                Debug.Log($"Heard/Saw the vocabulary word: {aKey.Word} {valueDictionaryOne}-times");
+            }
+            for (int i = 0; i < allKeysDictionaryTwo.Count; i++)
+            {
+                var aKey = allKeysDictionaryTwo[i];
+                (double valueDictionaryTwo, bool success) = vocabInteracted[aKey].ReturnStatCalculation(StatCalculationType.Sum);
+                Debug.Log($"I Interacted with an object that involved the {aKey.Word} vocabulary term [{valueDictionaryTwo}-times]");
+            }
         }
     }
 }

@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: SupportVocab_Large
   m_EditorClassIdentifier: 
   UniqueID: AppAnalyticsExample_Large
-  Word: Red
+  Word: Large
   IPAPronunciation: 
   Language: 1
   LevelIntroduced: 1
   CEFRLevel: 0
-  VocabCategory: 0
+  VocabCategory: 19
   Definition: 
   WordAudio:
-    AudioClip: {fileID: 0}
-    URLAudioType: 0
+    AudioClip: {fileID: 8300000, guid: e3d3a0136cda5984c8deadf1149c2a87, type: 3}
+    URLAudioType: 13
     URLReference: 
   DefinitionAudio:
     AudioClip: {fileID: 0}

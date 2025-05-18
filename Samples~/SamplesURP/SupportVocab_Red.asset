@@ -18,11 +18,11 @@ MonoBehaviour:
   Language: 1
   LevelIntroduced: 1
   CEFRLevel: 0
-  VocabCategory: 0
+  VocabCategory: 20
   Definition: 
   WordAudio:
-    AudioClip: {fileID: 0}
-    URLAudioType: 0
+    AudioClip: {fileID: 8300000, guid: f7b7e48a254681e42bae499eaddc95cd, type: 3}
+    URLAudioType: 13
     URLReference: 
   DefinitionAudio:
     AudioClip: {fileID: 0}

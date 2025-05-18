@@ -1,0 +1,21 @@
+{
+    "name": "com.fuzzphyte.applications.analytics.sample",
+    "rootNamespace": "FuzzPhyte.Applications.Analytics.Sample",
+    "references": [
+        "com.fuzzphyte.applications.analytics",
+        "com.fuzzphyte.utility.edu",
+        "com.fuzzphyte.utility",
+        "com.fuzzphyte.xr",
+        "com.fuzzphyte.utility.analytics",
+        "com.fuzzphyte.xr.samples"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

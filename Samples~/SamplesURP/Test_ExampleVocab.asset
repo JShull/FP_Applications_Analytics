@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce33cf22d5436eb43ab841dd6d615194, type: 3}
-  m_Name: ExampleVocab
+  m_Name: Test_ExampleVocab
   m_EditorClassIdentifier: 
   UniqueID: AppAnalyticsExample
   Word: Test
@@ -18,16 +18,16 @@ MonoBehaviour:
   Language: 1
   LevelIntroduced: 1
   CEFRLevel: 0
-  VocabCategory: 0
+  VocabCategory: 21
   Definition: a procedure intended to establish the quality, performance, or reliability
     of something, especially before it is taken into widespread use
   WordAudio:
-    AudioClip: {fileID: 0}
-    URLAudioType: 0
+    AudioClip: {fileID: 8300000, guid: be0870f9ef923cf4e8801d15d3c3ad8f, type: 3}
+    URLAudioType: 13
     URLReference: 
   DefinitionAudio:
-    AudioClip: {fileID: 0}
-    URLAudioType: 0
+    AudioClip: {fileID: 8300000, guid: ad816b5108df7ec4ebfc0b8f26e4e924, type: 3}
+    URLAudioType: 13
     URLReference: 
   Translations: []
   SemanticMaps: []
