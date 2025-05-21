@@ -117,9 +117,27 @@ namespace FuzzPhyte.Applications.Analytics
 
         public void RegisterItem(FPWorldItem item)
         {
-            item.ItemGrabbed += (fpItem, hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab,vocabInteracted);
-            item.ItemRaySelect += (fpItem, hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab,vocabInteracted);
-            item.ItemLabelActivated += (fpItem) => LogVocabInteraction(fpItem, MediaStatReporterPrefab,vocabMediaInteracted);
+            void OnGrabbed(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted);
+            void OnRaySelect(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted);
+            void OnLabelActivated(FPWorldItem fpItem) => LogVocabInteraction(fpItem, MediaStatReporterPrefab, vocabMediaInteracted);
+            
+            void OnDestroyed(FPWorldItem fpItem)
+            {
+                item.ItemGrabbed -= OnGrabbed;
+                item.ItemRaySelect -= OnRaySelect;
+                item.ItemLabelActivated -= OnLabelActivated;
+                item.ItemDestroyed -= OnDestroyed;
+            }
+
+            item.ItemGrabbed += OnGrabbed;
+            item.ItemRaySelect += OnRaySelect;
+            item.ItemLabelActivated += OnLabelActivated;
+            item.ItemDestroyed += OnDestroyed;
+            //
+            // item.ItemGrabbed += (fpItem, hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab,vocabInteracted);
+            // item.ItemRaySelect += (fpItem, hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab,vocabInteracted);
+            // item.ItemLabelActivated += (fpItem) => LogVocabInteraction(fpItem, MediaStatReporterPrefab,vocabMediaInteracted);
+            // item.ItemDestroyed += (fpItem) => ItemGotDestroyed(fpItem);
         }
 
         protected virtual void LogVocabInteraction(FPWorldItem item, GameObject prefab,Dictionary<FP_Vocab, FP_StatReporter_Int> storage)
