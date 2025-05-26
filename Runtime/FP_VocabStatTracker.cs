@@ -54,9 +54,10 @@ namespace FuzzPhyte.Applications.Analytics
             vocabInteracted = new Dictionary<FP_Vocab, FP_StatReporter_Int>();
             //register for listeners now that we already have in our list
         }
-#if UNITY_EDITOR
         [Tooltip("Use this for testing")]
         public List<FPWorldItem> TestWorldItems = new List<FPWorldItem>();
+#if UNITY_EDITOR
+
         [ContextMenu("Setup FP World Item Test List Listeners")]
         public void TestSetupFPItems()
         {
