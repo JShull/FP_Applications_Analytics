@@ -27,7 +27,11 @@ namespace FuzzPhyte.Applications.Analytics
         [Tooltip("This object needs a stat reporter on it")]
         public GameObject InteractionStatReporterPrefab;
         public GameObject MediaStatReporterPrefab;
+        //deleget
 
+        public delegate void OnVocabInteraction(List<FP_Vocab> Vocab);
+        public event OnVocabInteraction OnVocabMedia;
+        public event OnVocabInteraction OnVocabInteracted;
         //public Dictionary<FP_Vocab,FP_StatReporter_Int> VocabTrackers { get => vocabTrackers; }
         //public Dictionary<FP_Vocab,FP_StatReporter_Int> VocabInteractions { get => vocabInteractions; }
         //public IReadOnlyDictionary<FP_Vocab, FP_StatReporter_Int> ReturnTrackers() => vocabMediaInteracted;
@@ -118,9 +122,9 @@ namespace FuzzPhyte.Applications.Analytics
 
         public void RegisterItem(FPWorldItem item)
         {
-            void OnGrabbed(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted);
-            void OnRaySelect(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted);
-            void OnLabelActivated(FPWorldItem fpItem) => LogVocabInteraction(fpItem, MediaStatReporterPrefab, vocabMediaInteracted);
+            void OnGrabbed(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted,false);
+            void OnRaySelect(FPWorldItem fpItem, XRHandedness hand) => LogVocabInteraction(fpItem, InteractionStatReporterPrefab, vocabInteracted,false);
+            void OnLabelActivated(FPWorldItem fpItem) => LogVocabInteraction(fpItem, MediaStatReporterPrefab, vocabMediaInteracted,true);
             
             void OnDestroyed(FPWorldItem fpItem)
             {
@@ -141,7 +145,7 @@ namespace FuzzPhyte.Applications.Analytics
             // item.ItemDestroyed += (fpItem) => ItemGotDestroyed(fpItem);
         }
 
-        protected virtual void LogVocabInteraction(FPWorldItem item, GameObject prefab,Dictionary<FP_Vocab, FP_StatReporter_Int> storage)
+        protected virtual void LogVocabInteraction(FPWorldItem item, GameObject prefab,Dictionary<FP_Vocab, FP_StatReporter_Int> storage, bool mediaInteraction=false)
         {
             var vocab = item.DetailedLabelData.VocabData;
            
@@ -161,34 +165,45 @@ namespace FuzzPhyte.Applications.Analytics
                     cachedVocab.Add(supportVocab[i].SupportData);
                 }
             }
-            //seen this vocab?
-            for(int j = 0; j < cachedVocab.Count; j++)
+            if (mediaInteraction)
             {
-                var aVocabCached = cachedVocab[j];
-                if (!allVocab.Contains(aVocabCached))
+                OnVocabMedia?.Invoke(cachedVocab);
+            }
+            else
+            {
+                OnVocabInteracted?.Invoke(cachedVocab);
+            }
+
+                //seen this vocab?
+                for (int j = 0; j < cachedVocab.Count; j++)
                 {
-                    allVocab.Add(aVocabCached);
-                }
-                FP_StatReporter_Int reporter;
-                if (!storage.TryGetValue(aVocabCached, out reporter))
-                {
-                    reporter = CreateTrackerForVocab(prefab,aVocabCached);
-                    Debug.Log($"Creating reporter for {aVocabCached.Word}");
-                    if(reporter != null)
+                    var aVocabCached = cachedVocab[j];
+                    if (!allVocab.Contains(aVocabCached))
                     {
-                        storage.Add(aVocabCached, reporter);
+                        allVocab.Add(aVocabCached);
+                    }
+                    FP_StatReporter_Int reporter;
+                    if (!storage.TryGetValue(aVocabCached, out reporter))
+                    {
+                        //creating the reporter
+                        reporter = CreateTrackerForVocab(prefab, aVocabCached);
+                        Debug.Log($"Creating reporter for {aVocabCached.Word}");
+                        if (reporter != null)
+                        {
+                            storage.Add(aVocabCached, reporter);
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                     else
                     {
-                        return;
+                        Debug.Log($"Had the reporter already, {aVocabCached.Word}");
                     }
-                }
-                else
-                {
-                    Debug.Log($"Had the reporter already, {aVocabCached.Word}");
-                }
+
                     StartCoroutine(DelayEndOfFrameSyncReporter(aVocabCached, reporter));
-            }
+                }
         }
         IEnumerator DelayEndOfFrameSyncReporter(FP_Vocab aVocabCached, FP_StatReporter_Int reporter)
         {
