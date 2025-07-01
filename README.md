@@ -6,7 +6,7 @@ FP_Application_Analytics is designed to sit at an application level utilizing mu
 
 ## Setup & Design
 
-FP_Application_Analytics is a work in progress.
+FP_Application_Analytics is a work in progress - please install [FP_Installer](https://github.com/jshull/FP_Installer.git) for manual dependency support.
 
 ### Software Architecture
 

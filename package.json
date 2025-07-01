@@ -1,8 +1,8 @@
 {
     "name": "com.fuzzphyte.applications.analytics",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "displayName": "FP Applications Analytics",
-    "description": "FP AA utilizes lower FuzzPhyte libraries to build app level solutions.  https://github.com/JShull/FP_Utility.git to your Unity package manager as a git url and others.",
+    "description": "FP AA utilizes lower FuzzPhyte libraries to build app level solutions. Use the FP_Installer, https://github.com/JShull/FP_Installer.git to get and sync other manual repositories.",
     "unity": "6000.1",
     "unityRelease": "0f1",
     "documentationUrl": "https://github.com/jshull/FP_Applications_Analytics/README.md",
@@ -14,8 +14,7 @@
     },
     "dependencies": {
       "com.unity.mathematics": "1.2.6",
-      "com.unity.textmeshpro": "3.0.9",
-      "com.fuzzphyte.utility": "https://github.com/JShull/FP_Utility.git"
+      "com.unity.textmeshpro": "3.0.9"
     },
     "samples": [
       {
