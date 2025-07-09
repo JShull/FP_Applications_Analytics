@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-07-09
+
+### Changed
+
+- [@JShull](https://github.com/jshull).
+  - FP_VocabStatTracker
+    - Public return methods to grab sum interactions without ending the stat
+
 ## [0.2.0] - 2025-07-01
 
 ### 0.2.0 Added

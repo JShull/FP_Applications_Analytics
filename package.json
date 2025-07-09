@@ -1,6 +1,6 @@
 {
     "name": "com.fuzzphyte.applications.analytics",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "displayName": "FP Applications Analytics",
     "description": "FP AA utilizes lower FuzzPhyte libraries to build app level solutions. Use the FP_Installer, https://github.com/JShull/FP_Installer.git to get and sync other manual repositories.",
     "unity": "6000.1",

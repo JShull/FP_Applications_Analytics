@@ -257,5 +257,64 @@ namespace FuzzPhyte.Applications.Analytics
                 Debug.Log($"I Interacted with an object that involved the {aKey.Word} vocabulary term [{valueDictionaryTwo}-times]");
             }
         }
+        /// <summary>
+        /// public method to return the vocab word most interacted with based on the sum of the interactions
+        /// </summary>
+        public (bool,FP_Vocab,double) ReturnStatSumMostVocabInteraction()
+        {
+            var allKeysDictionaryTwo = vocabInteracted.Keys.ToList();
+            Dictionary<FP_Vocab, double> vocabSum = new Dictionary<FP_Vocab, double>();
+            for (int i = 0; i < allKeysDictionaryTwo.Count; i++)
+            {
+                var aKey = allKeysDictionaryTwo[i];
+                (double valueDictionaryTwo, bool success) = vocabInteracted[aKey].ReturnStatCalculation(StatCalculationType.Sum);
+                if (success&&!vocabSum.ContainsKey(aKey))
+                {
+                    vocabSum.Add(aKey, valueDictionaryTwo);
+                }
+                //Debug.Log($"I Interacted with an object that involved the {aKey.Word} vocabulary term [{valueDictionaryTwo}-times]");
+            }
+
+            if (vocabSum.Count > 0)
+            {
+                var maxVocab = vocabSum.Aggregate((l, r) => l.Value > r.Value ? l : r);
+                Debug.Log($"Most interacted with vocab word is {maxVocab.Key.Word} with {maxVocab.Value}-interactions");
+                return (true, maxVocab.Key, maxVocab.Value);
+            }
+            else
+            {
+                Debug.Log("No vocab interactions found.");
+                return (false, null, 0);
+            }
+        }
+        /// <summary>
+        /// public method to return the vocab word most seen/heard (media) with based on the sum of those interactions
+        /// </summary>
+        public (bool,FP_Vocab,double) ReturnStatSumMostVocabMediaInteraction()
+        {
+            var allKeysDictionaryOne = vocabMediaInteracted.Keys.ToList();
+            Dictionary<FP_Vocab, double> vocabSum = new Dictionary<FP_Vocab, double>();
+            for (int i = 0; i < allKeysDictionaryOne.Count; i++)
+            {
+                var aKey = allKeysDictionaryOne[i];
+                (double valueDictionaryOne, bool success) = vocabMediaInteracted[aKey].ReturnStatCalculation(StatCalculationType.Sum);
+                if (success && !vocabSum.ContainsKey(aKey))
+                {
+                    vocabSum.Add(aKey, valueDictionaryOne);
+                }
+                //Debug.Log($"Heard/Saw the vocabulary word: {aKey.Word} {valueDictionaryOne}-times");
+            }
+            if (vocabSum.Count > 0)
+            {
+                var maxVocab = vocabSum.Aggregate((l, r) => l.Value > r.Value ? l : r);
+                Debug.Log($"Most interacted with media vocab word is {maxVocab.Key.Word} with {maxVocab.Value}-interactions");
+                return (true, maxVocab.Key, maxVocab.Value);
+            }
+            else
+            {
+                Debug.Log("No media vocab interactions found.");
+                return (false, null, 0);
+            }
+        }
     }
 }
